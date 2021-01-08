@@ -21,7 +21,7 @@
 %---------------------------------------------------------------------------%
 %->> Document settings
 %---------------------------------------------------------------------------%
-\usepackage[authoryear,list]{Style/artratex}% document settings
+\usepackage[biber,numbers,list]{Style/artratex}% document settings
 %- usage: \usepackage[option1,option2,...,optionN]{artratex}
 %- Multiple optional arguments:
 %- [bibtex|biber]% set bibliography processor and package
@@ -40,6 +40,25 @@
 %- [list]% provide enhanced list environments for algorithm and coding
 %- [math]% enable some extra math packages
 %- [xlink]% disable link colors
+% \addbibresource{Biblio/papers.bib}%
+% \DeclareSourcemap{
+%   \maps[datatype=bibtex]{
+%     \map[overwrite]{
+%       \perdatasource{Biblio/papers.bib}
+%       \step[fieldset=keywords, fieldvalue={,papers}, append]
+%     }
+%   }
+% }
+\makeatletter
+\AtDataInput{%
+  \ifltxcounter{datacount@\the\c@refsection}
+    {}
+    {\newcounter{datacount@\the\c@refsection}}%
+  \stepcounter{datacount@\the\c@refsection}}
+
+\newcommand*{\refsectionbibcount}{\arabic{datacount@\the\c@refsection}}
+\makeatother
+
 \usepackage{Style/artracom}% user defined commands
 %---------------------------------------------------------------------------%
 %->> Document inclusion
@@ -87,7 +106,7 @@
 \artxifstreq{\artxbib}{bibtex}{% enable bibtex
     \bibliography{Biblio/ref}% bibliography
 }{%
-    \printbibliography% bibliography
+    \printbibliography[notkeyword={papers}]% bibliography
 }
 \input{Tex/Backmatter}% other information
 \end{document}
